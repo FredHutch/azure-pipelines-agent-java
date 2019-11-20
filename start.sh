@@ -22,8 +22,22 @@ if [ -n "$AZP_WORK" ]; then
   mkdir -p "$AZP_WORK"
 fi
 
-rm -rf /azp/agent
-mkdir /azp/agent
+# Let the user decide whether to update the agent or not
+FORCEUPDATE=0
+if [ -z "$AZP_UPDATE" ]; then
+    print_header "Reusing agent files, if present"
+else
+    FORCEUPDATE=$AZP_UPDATE
+fi
+
+if [ $FORCEUPDATE == "1" ]; then
+  print_header 'Forcing agent update: deleting /azp/agent folder'
+  print_header 'Note: if your AZP_WORK variable is inside /azp/agent; installed tools will be deleted, too'
+
+  rm -rf /azp/agent
+  mkdir /azp/agent
+fi
+
 cd /azp/agent
 
 export AGENT_ALLOW_RUNASROOT="1"
@@ -47,33 +61,50 @@ print_header() {
 # Let the agent ignore the token env variables
 export VSO_AGENT_IGNORE=AZP_TOKEN,AZP_TOKEN_FILE
 
-print_header "1. Determining matching Azure Pipelines agent..."
+# Is there already a client here? Maybe we don't need to download 88MB...
+if [ -e config.sh ]; then
+    print_header "Azure Pipelines files are already installed"
+else
+    print_header "Need to download an Azure Pipelines package: obtaining Azure Pipelines agent version..."
 
-AZP_AGENT_RESPONSE=$(curl -LsS \
-  -u user:$(cat "$AZP_TOKEN_FILE") \
-  -H 'Accept:application/json;api-version=3.0-preview' \
-  "$AZP_URL/_apis/distributedtask/packages/agent?platform=linux-x64")
+    AZP_AGENT_RESPONSE=$(curl -LsS \
+      -u user:$(cat "$AZP_TOKEN_FILE") \
+      -H 'Accept:application/json;api-version=3.0-preview' \
+      "$AZP_URL/_apis/distributedtask/packages/agent?platform=linux-x64")
 
-if echo "$AZP_AGENT_RESPONSE" | jq . >/dev/null 2>&1; then
-  AZP_AGENTPACKAGE_URL=$(echo "$AZP_AGENT_RESPONSE" \
-    | jq -r '.value | map([.version.major,.version.minor,.version.patch,.downloadUrl]) | sort | .[length-1] | .[3]')
+    if echo "$AZP_AGENT_RESPONSE" | jq . >/dev/null 2>&1; then
+      AZP_AGENTPACKAGE_URL=$(echo "$AZP_AGENT_RESPONSE" \
+        | jq -r '.value | map([.version.major,.version.minor,.version.patch,.downloadUrl]) | sort | .[length-1] | .[3]')
+    fi
+
+    if [ -z "$AZP_AGENTPACKAGE_URL" -o "$AZP_AGENTPACKAGE_URL" == "null" ]; then
+      echo 1>&2 "error: could not determine a matching Azure Pipelines agent - check that account '$AZP_URL' is correct and the token is valid for that account"
+      exit 1
+    fi
+
+    print_header "Downloading and installing Azure Pipelines agent..."
+
+    curl -LsS $AZP_AGENTPACKAGE_URL | tar -xz & wait $!
 fi
-
-if [ -z "$AZP_AGENTPACKAGE_URL" -o "$AZP_AGENTPACKAGE_URL" == "null" ]; then
-  echo 1>&2 "error: could not determine a matching Azure Pipelines agent - check that account '$AZP_URL' is correct and the token is valid for that account"
-  exit 1
-fi
-
-print_header "2. Downloading and installing Azure Pipelines agent..."
-
-curl -LsS $AZP_AGENTPACKAGE_URL | tar -xz & wait $!
 
 source ./env.sh
 
 trap 'cleanup; exit 130' INT
 trap 'cleanup; exit 143' TERM
 
-print_header "3. Configuring Azure Pipelines agent..."
+print_header "Configuring Azure Pipelines agent..."
+
+STARTED_FILE=/azp/.started
+
+# NB: a trick to avoid confusing messages: the remove command would 
+# not block code execution, even if there is no agent to be removed.
+# This way we support restarting the same Docker container; without downloading a package every time.
+if [ -e $STARTED_FILE ]; then
+  print_header "Removing the previous agent..."
+  cleanup
+fi
+
+touch $STARTED_FILE
 
 ./config.sh --unattended \
   --agent "${AZP_AGENT_NAME:-$(hostname)}" \
@@ -81,11 +112,11 @@ print_header "3. Configuring Azure Pipelines agent..."
   --auth PAT \
   --token $(cat "$AZP_TOKEN_FILE") \
   --pool "${AZP_POOL:-Default}" \
-  --work "${AZP_WORK:-_work}" \
+  --work "${AZP_WORK:-/_work}" \
   --replace \
   --acceptTeeEula & wait $!
 
-print_header "4. Running Azure Pipelines agent..."
+print_header "Running Azure Pipelines agent..."
 
 # `exec` the node runtime so it's aware of TERM and INT signals
 # AgentService.js understands how to handle agent self-update and restart
