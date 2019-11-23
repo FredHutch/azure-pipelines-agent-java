@@ -19,18 +19,14 @@ RUN apt-get update && \
     software-properties-common \
     apt-transport-https
 
-RUN /scripts/base/preparemetadata.sh && \
+RUN /scripts/preparemetadata.sh && \
     /scripts/installers/basic.sh && \
-    /scripts/base/repos.sh && \
+    /scripts/ms-repos.sh && \
     /scripts/helpers/apt.sh && \
-    /scripts/installers/7-zip.sh && \
     /scripts/installers/azcopy.sh && \
-    /scripts/installers/gcc.sh && \
-    /scripts/installers/clang.sh && \
-    /scripts/installers/cmake.sh && \
-    /scripts/installers/build-essential.sh && \
     /scripts/installers/azure-cli.sh && \
-    /scripts/installers/azure-devops-cli.sh
+    /scripts/installers/node.sh && \
+    /scripts/installers/java.sh 
 
 WORKDIR /azp
 

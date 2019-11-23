@@ -22,6 +22,12 @@ if [ -n "$AZP_WORK" ]; then
   mkdir -p "$AZP_WORK"
 fi
 
+print_header() {
+  lightcyan='\033[1;36m'
+  nocolor='\033[0m'
+  echo -e "${lightcyan}$1${nocolor}"
+}
+
 # Let the user decide whether to update the agent or not
 FORCEUPDATE=0
 if [ -z "$AZP_UPDATE" ]; then
@@ -35,6 +41,10 @@ if [ $FORCEUPDATE == "1" ]; then
   print_header 'Note: if your AZP_WORK variable is inside /azp/agent; installed tools will be deleted, too'
 
   rm -rf /azp/agent
+  mkdir /azp/agent
+fi
+
+if [ ! -e /azp/agent ]; then
   mkdir /azp/agent
 fi
 
@@ -52,11 +62,6 @@ cleanup() {
   fi
 }
 
-print_header() {
-  lightcyan='\033[1;36m'
-  nocolor='\033[0m'
-  echo -e "${lightcyan}$1${nocolor}"
-}
 
 # Let the agent ignore the token env variables
 export VSO_AGENT_IGNORE=AZP_TOKEN,AZP_TOKEN_FILE
