@@ -44,8 +44,8 @@ apt-get install -y --no-install-recommends libcurl3
 echo "Install locales"
 apt-get install -y --no-install-recommends locales
 
-echo "Install netcat"
-apt-get install -y --no-install-recommends netcat
+# echo "Install netcat"
+# apt-get install -y --no-install-recommends netcat
 
 echo "Install openssh-client"
 apt-get install -y --no-install-recommends openssh-client
@@ -59,8 +59,8 @@ apt-get install -y --no-install-recommends rsync
 echo "Install sudo"
 apt-get install -y --no-install-recommends sudo
 
-echo "Install telnet"
-apt-get install -y --no-install-recommends telnet
+# echo "Install telnet"
+# apt-get install -y --no-install-recommends telnet
 
 echo "Install time"
 apt-get install -y --no-install-recommends time
@@ -133,7 +133,7 @@ apt-get install -y --no-install-recommends git
 
 # Run tests to determine that the software installed as expected
 echo "Testing to make sure that script performed as expected, and basic scenarios work"
-for cmd in curl file ftp netcat ssh rsync sudo telnet time unzip wget zip nano tree git; do
+for cmd in curl file ssh rsync sudo time unzip wget zip nano tree git; do
     if ! command -v $cmd; then
         echo "$cmd was not installed"
         exit 1
@@ -147,7 +147,7 @@ DocumentInstalledItemIndent "git"
 DocumentInstalledItemIndent "curl"
 DocumentInstalledItemIndent "dnsutils"
 DocumentInstalledItemIndent "file"
-DocumentInstalledItemIndent "ftp"
+# DocumentInstalledItemIndent "ftp"
 DocumentInstalledItemIndent "iproute2"
 DocumentInstalledItemIndent "iputils-ping"
 # DocumentInstalledItemIndent "jq"
@@ -155,12 +155,12 @@ DocumentInstalledItemIndent "iputils-ping"
 # DocumentInstalledItemIndent "libicu55"
 # DocumentInstalledItemIndent "libunwind8"
 DocumentInstalledItemIndent "locales"
-DocumentInstalledItemIndent "netcat"
+# DocumentInstalledItemIndent "netcat"
 DocumentInstalledItemIndent "openssh-client"
 DocumentInstalledItemIndent "rsync"
-DocumentInstalledItemIndent "shellcheck"
+# DocumentInstalledItemIndent "shellcheck"
 DocumentInstalledItemIndent "sudo"
-DocumentInstalledItemIndent "telnet"
+# DocumentInstalledItemIndent "telnet"
 DocumentInstalledItemIndent "time"
 DocumentInstalledItemIndent "unzip"
 DocumentInstalledItemIndent "wget"
