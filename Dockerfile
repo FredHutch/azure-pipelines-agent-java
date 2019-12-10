@@ -10,7 +10,7 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes && \
     touch /image/metadata.txt
 
 COPY scripts /scripts
-ADD <JDK_URL> /tmp/jdk.tar.gz
+ADD jdk-8u231-linux-x64.tar.gz /tmp/jdk.tar.gz
 
 RUN apt-get update && \
     apt-get install \

@@ -1,0 +1,9 @@
+version: '2'
+services:
+  hutchbase-build:
+    image: dockerimages.fhcrc.org/hutchbase-build:latest
+
+    labels:
+      io.rancher.container.pull_image: always
+
+    restart: always
