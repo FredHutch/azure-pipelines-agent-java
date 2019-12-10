@@ -8,8 +8,10 @@
 # Source the helpers for use with the script
 source $HELPER_SCRIPTS/document.sh
 
-if [ -z ${$JDK_DOWNLOAD_URL} ];
+if [ -z $JDK_DOWNLOAD_URL ];
 then
+    echo "JDK Download URL not specified, skipping Java install"
+else
     echo "Install jdk"
     wget -O jdk.tar.gz $JDK_DOWNLOAD_URL
     tar -zxf jdk.tar.gz -C /usr/lib/jvm/
@@ -17,8 +19,6 @@ then
     JDK_DIR = `pwd`
 
     echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
-else
-    echo "JDK Download URL not specified, skipping Java install"
 fi
 
 # Install Gradle
