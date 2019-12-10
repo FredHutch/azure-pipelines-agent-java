@@ -8,15 +8,6 @@
 # Source the helpers for use with the script
 source $HELPER_SCRIPTS/document.sh
 
-if [ -z $JDK_DOWNLOAD_URL ];
-then
-    echo "JDK Download URL not specified, using local"
-else
-    echo "Install jdk"
-    wget -O /tmp/jdk.tar.gz $JDK_DOWNLOAD_URL
-    
-fi
-
 tar -zxf /tmp/jdk.tar.gz -C /usr/lib/jvm/
 cd /usr/lib/jvm/jdk*/
 JDK_DIR = `pwd`
