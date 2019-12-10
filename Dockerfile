@@ -10,6 +10,7 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes && \
     touch /image/metadata.txt
 
 COPY scripts /scripts
+COPY jdk-8u231-linux-x64.tar.gz /tmp/jdk.tar.gz
 
 RUN apt-get update && \
     apt-get install \
@@ -23,8 +24,8 @@ RUN /scripts/preparemetadata.sh && \
     /scripts/installers/basic.sh && \
     /scripts/ms-repos.sh && \
     /scripts/helpers/apt.sh && \
-    /scripts/installers/azcopy.sh && \
-    /scripts/installers/azure-cli.sh && \
+    # /scripts/installers/azcopy.sh && \
+    # /scripts/installers/azure-cli.sh && \
     /scripts/installers/node.sh && \
     /scripts/installers/java.sh 
 

@@ -10,16 +10,18 @@ source $HELPER_SCRIPTS/document.sh
 
 if [ -z $JDK_DOWNLOAD_URL ];
 then
-    echo "JDK Download URL not specified, skipping Java install"
+    echo "JDK Download URL not specified, using local"
 else
     echo "Install jdk"
-    wget -O jdk.tar.gz $JDK_DOWNLOAD_URL
-    tar -zxf jdk.tar.gz -C /usr/lib/jvm/
-    cd /usr/lib/jvm/jdk*/
-    JDK_DIR = `pwd`
-
-    echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
+    wget -O /tmp/jdk.tar.gz $JDK_DOWNLOAD_URL
+    
 fi
+
+tar -zxf /tmp/jdk.tar.gz -C /usr/lib/jvm/
+cd /usr/lib/jvm/jdk*/
+JDK_DIR = `pwd`
+
+echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
 
 # Install Gradle
 # This script downloads the latest HTML list of releases at https://gradle.org/releases/.
