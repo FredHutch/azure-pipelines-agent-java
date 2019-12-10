@@ -8,11 +8,18 @@
 # Source the helpers for use with the script
 source $HELPER_SCRIPTS/document.sh
 
+if [ -z ${$JDK_DOWNLOAD_URL} ];
+then
+    echo "Install jdk"
+    wget -O jdk.tar.gz $JDK_DOWNLOAD_URL
+    tar -zxf jdk.tar.gz -C /usr/lib/jvm/
+    cd /usr/lib/jvm/jdk*/
+    JDK_DIR = `pwd`
 
-echo "Install jdk"
-apt-get install -y --no-install-recommends openjdk-8-jdk
-
-echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/" | tee -a /etc/environment
+    echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
+else
+    echo "JDK Download URL not specified, skipping Java install"
+fi
 
 # Install Gradle
 # This script downloads the latest HTML list of releases at https://gradle.org/releases/.
@@ -40,7 +47,6 @@ for cmd in gradle java javac; do
         exit 1
     fi
 done
-
 
 echo "Lastly, documenting what we added to the metadata file"
 DocumentInstalledItem "Java ($(java -version))"

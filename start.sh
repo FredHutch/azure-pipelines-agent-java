@@ -93,6 +93,7 @@ else
 fi
 
 source ./env.sh
+export PATH="$JAVA_HOME/bin:$PATH"
 
 trap 'cleanup; exit 130' INT
 trap 'cleanup; exit 143' TERM
