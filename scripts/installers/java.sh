@@ -8,11 +8,13 @@
 # Source the helpers for use with the script
 source $HELPER_SCRIPTS/document.sh
 
+mkdir -p /usr/lib/jvm
 tar -zxf /tmp/jdk.tar.gz -C /usr/lib/jvm/
 cd /usr/lib/jvm/jdk*/
-JDK_DIR = `pwd`
+JDK_DIR=`pwd`
 
 echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
+export PATH="$PATH:$JDK_DIR/bin"
 
 # Install Gradle
 # This script downloads the latest HTML list of releases at https://gradle.org/releases/.
