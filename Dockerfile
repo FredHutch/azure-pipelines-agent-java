@@ -34,4 +34,9 @@ WORKDIR /azp
 COPY ./start.sh .
 RUN chmod +x start.sh
 
-CMD ["./start.sh"]
+
+CMD ["/bin/sh", "-c", \
+    "AZP_URL=`cat /run/secrets/HUTCHBASE_BUILD_AZP_URL` \
+    AZP_TOKEN=`cat /run/secrets/HUTCHBASE_BUILD_AZP_TOKEN` \
+    AZP_AGENT_NAME=`cat /run/secrets/HUTCHBASE_BUILD_AZP_AGENT_NAME` \
+    ./start.sh"]

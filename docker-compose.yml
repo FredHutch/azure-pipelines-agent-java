@@ -7,3 +7,16 @@ services:
       io.rancher.container.pull_image: always
 
     restart: always
+
+    secrets:
+      - HUTCHBASE_BUILD_AZP_URL
+      - HUTCHBASE_BUILD_AZP_TOKEN
+      - HUTCHBASE_BUILD_AZP_AGENT_NAME
+
+secrets:
+  HUTCHBASE_BUILD_AZP_URL:
+    external: true
+  HUTCHBASE_BUILD_AZP_TOKEN:
+    external: true
+  HUTCHBASE_BUILD_AZP_AGENT_NAME:
+    external: true
