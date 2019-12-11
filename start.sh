@@ -117,7 +117,7 @@ touch $STARTED_FILE
   --url "$AZP_URL" \
   --auth PAT \
   --token $(cat "$AZP_TOKEN_FILE") \
-  --pool "${AZP_POOL:-Default}" \
+  --pool "${AZP_POOL:-Internal}" \
   --work "${AZP_WORK:-/_work}" \
   --replace \
   --acceptTeeEula & wait $!

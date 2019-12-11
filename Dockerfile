@@ -24,8 +24,6 @@ RUN /scripts/preparemetadata.sh && \
     /scripts/installers/basic.sh && \
     /scripts/ms-repos.sh && \
     /scripts/helpers/apt.sh && \
-    # /scripts/installers/azcopy.sh && \
-    # /scripts/installers/azure-cli.sh && \
     /scripts/installers/node.sh && \
     /scripts/installers/java.sh 
 
