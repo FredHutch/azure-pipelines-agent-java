@@ -14,7 +14,9 @@ cd /usr/lib/jvm/jdk*/
 JDK_DIR=`pwd`
 
 echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
-export PATH="$PATH:$JDK_DIR/bin"
+echo "JAVA_HOME_8_X64=${JDK_DIR}" | tee -a /etc/environment
+echo "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8" | tee -a /etc/environment
+update-java-alternatives -s ${JDK_DIR}
 
 # Install Gradle
 # This script downloads the latest HTML list of releases at https://gradle.org/releases/.
@@ -44,4 +46,5 @@ for cmd in gradle java javac; do
 done
 
 echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Java ($(java -version))"
+DocumentInstalledItem "Java ($(${JDK_DIR} -version |& head -n 1))"
+
