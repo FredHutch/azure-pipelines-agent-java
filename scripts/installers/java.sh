@@ -17,6 +17,7 @@ echo "JAVA_HOME=${JDK_DIR}" | tee -a /etc/environment
 echo "JAVA_HOME_8_X64=${JDK_DIR}" | tee -a /etc/environment
 echo "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8" | tee -a /etc/environment
 update-java-alternatives -s ${JDK_DIR}
+export PATH="$PATH:$JDK_DIR/bin"
 
 # Install Gradle
 # This script downloads the latest HTML list of releases at https://gradle.org/releases/.
