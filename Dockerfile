@@ -25,6 +25,7 @@ RUN /scripts/preparemetadata.sh && \
     /scripts/ms-repos.sh && \
     /scripts/helpers/apt.sh && \
     /scripts/installers/node.sh && \
+    /scripts/installers/chrome.sh && \
     /scripts/installers/java.sh 
 
 WORKDIR /azp
