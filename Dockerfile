@@ -2,7 +2,8 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     METADATA_FILE=/image/metadata.txt \
-    HELPER_SCRIPTS=/scripts/helpers
+    HELPER_SCRIPTS=/scripts/helpers \
+    TZ=America/Vancouver
 
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes && \
     mkdir /image && \ 
@@ -18,7 +19,8 @@ RUN apt-get update && \
     lsb-release \ 
     lsb-core \
     software-properties-common \
-    apt-transport-https
+    apt-transport-https \
+    tzdata
 
 RUN /scripts/preparemetadata.sh && \
     /scripts/installers/basic.sh && \
