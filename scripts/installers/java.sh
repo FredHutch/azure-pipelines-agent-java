@@ -48,4 +48,4 @@ done
 
 echo "Lastly, documenting what we added to the metadata file"
 DocumentInstalledItem "Java ($(${JDK_DIR} -version |& head -n 1))"
-
+DocumentInstalledItem "Gradle ${gradleVersion}"
